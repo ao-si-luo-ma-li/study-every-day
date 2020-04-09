@@ -247,4 +247,300 @@ function Children3(params) {
 Children3.prototype = Object.create(Parent3.prototype);
 Children3.prototype.constructor = Children3;
 var child3 = new Children3();
-console.log('child3', child3)
+// console.log('child3', child3)
+
+function getRepeatEle(arr) {
+  let obj = {};
+  arr.forEach(element => {
+    if (obj[element]) {
+      obj[element] += 1;
+    }
+    else {
+      obj[element] = 1
+    }
+  });
+  console.log(arr.filter(ele => obj[ele] === 1))
+}
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function(s) {
+  let cuStr = '';
+  let max = 0;
+  let front = 0;
+  let next = 0;
+  while(next < s.length) {
+    const repeatIndex = cuStr.indexOf(s[next]);
+    if (repeatIndex > -1) {
+        max = max < cuStr.length ? cuStr.length : max;
+        front = front + repeatIndex + 1;
+    }
+    cuStr = s.slice(front, next+1);
+    next++;
+  }
+  return max < cuStr.length ? cuStr.length : max;
+};
+
+// console.log(lengthOfLongestSubstring('igigikiii'))
+
+function Fa(x, y) {
+  this.x = x;
+  this.y = y;
+}
+Fa.sum = function (z) {
+  return this.x + this.y + z;
+}
+const fa = new Fa('a', 2);
+// console.log(fa.sum(3))
+
+async function async1() {
+  console.log('async1 start -> ', 2); // 
+  await async2();
+  setTimeout(function() {
+      console.log('setTimeout1 ->', 7)  
+  },0)
+}
+async function async2() {
+  setTimeout(function() {
+      console.log('setTimeout2 ->', 6)  
+  },0)
+}
+console.log('script start -> ', 1);
+setTimeout(function() {
+  console.log('setTimeout3 -> ', 5);  
+}, 0)
+async1();
+
+new Promise(function(resolve) {
+  console.log('promise1 -> ', 3);  
+  resolve();
+}).then(function() {
+  console.log('promise2 ->', 8);  
+});
+console.log('script end -> ', 4);  
+
+function findMinOver(target, origin) {
+  let temp;
+  origin.forEach(num => {
+    if (num > target) {
+      temp = !temp ? num : num < temp ? num : temp;
+    }
+  })
+  return temp
+}
+
+// 根据一组数字，排列组合最小数字 99887123 => 12378899
+function getMin(str) {
+  return parseInt(`${str}`.split('').sort((a,b) => +a - +b).join(''))
+}
+
+// 实验： map方法时，修改原数组会出现怎么样子？
+function arrShift() {
+  var a = b = [1,2,3,4];
+  var c = a.map(num => {
+    console.log('num', num)
+    let hh = a.shift()
+    return hh;
+  });
+  console.log(b, c)
+}
+
+// 输出环形数据
+function outputCircle(arr) {
+  let rows = arr.length;
+  let columns = arr[0].length;
+  let minRow = 0;
+  let maxRow = rows -1;
+  let minColumn = 0;
+  let maxColumn = columns -1;
+  while (true) {
+    // 输出外圈上一行
+    arr[minRow].forEach((num, index) => {
+      if (index >= minColumn && index <= maxColumn) {
+        console.log('num', num);
+      }
+    });
+    // 输出外圈右一列
+    for (let index = minRow + 1; index < maxRow; index++) {
+      console.log('num', arr[index][maxColumn])
+    }
+    // 输出外圈下一列
+    arr[maxRow].slice(0).reverse().forEach((num, index) => {
+      if (index >= minColumn && index <= maxColumn) {
+        console.log('num', num);
+      }
+    });
+    // 输出外圈左一列
+    for (let index = maxRow - 1; index > minRow; index--){
+      console.log('num', arr[index][minColumn]);
+    }
+    minRow++;
+    maxRow--;
+    minColumn++;
+    maxColumn--;
+    if (minRow >= maxRow || minColumn >= maxColumn) {
+      break;
+    }
+  }
+  console.log('00000')
+}
+var a = [
+  [1,2,3,4],
+  [12,13,14,5],
+  [11,16,15,6],
+  [10,9,8,7]
+]
+outputCircle(a)
+
+// 实现一个bind函数
+Function.prototype.myBind = function(context) {
+  if (typeof this !== 'function') {
+    throw new TypeError('这不是一个函数')
+  }
+  const fn = this;
+  const args = [...arguments].slice(1);
+  return function F() {
+    // 处理函数使用new的情况。bind 不能改变构造方法的this，构造方法中this指向实例
+    if (this instanceof F) {
+      return new fn(...args, ...arguments);
+    }
+    else {
+      return fn.apply(context,[...args, ...arguments])
+    }
+  }
+}
+
+// 实现千分位
+function thsoundSplit(params) {
+  if (!params) return;
+  const ls = `${params}`;
+  let mainStr = null;
+  let strArr = [];
+  let handleData = ls.split('.');
+  let mainData = handleData[0];
+  let dotData = handleData[1];
+  let splitIndex = mainData.length;
+  while (splitIndex > 2) {
+    strArr.push(mainData.slice(splitIndex - 3, splitIndex));
+    splitIndex = splitIndex - 3;
+  }
+  if (splitIndex > 0) {
+    strArr.push(mainData.slice(0, splitIndex));
+  }
+  mainStr = strArr.reverse().join(',');
+  if (dotData && dotData.length > 0) {
+    mainStr = `${mainStr}.${dotData}`
+  }
+  return mainStr;
+}
+
+// 合并两个有序数组
+let a = [1,2,6];
+let b = [3,4,5,7];
+function sortArr(a, b) {
+  let sort = [];
+  let toA = 0;
+  let toB = 0;
+  while (toA < a.length && toB < b.length) {
+    if (a[toA] < b[toB]) {
+      sort.push(a[toA]);
+      toA++;
+    }
+    else {
+      sort.push(b[toB]);
+      toB++;
+    }
+  }
+  if (a.length > b.length) {
+    sort = sort.concat(a.slice(toA))
+  }
+  else {
+    sort = sort.concat(b.slice(toB))
+  }
+  return sort;
+}
+
+// 实现Promise.all
+Promise.my = function (list) {
+  return new Promise((resolve, reject) => {
+    let i = 0;
+    let result = [];
+    function doNext(promise) {
+      promise.then((data) => {
+        result.push(data);
+        if (i === list.length) {
+          resolve(result);
+        }
+        else {
+          doNext(list[++i]);
+        }
+      })
+      .catch(() => {
+        reject();
+      })
+    }
+    doNext(list[i])
+  })
+}
+
+Promise.resolve()
+.then(() => {
+  throw 'www error';
+})
+.catch((e) => {
+  console.log('1 =>', e);
+  // return Promise.reject('asdads');
+  throw 'kkkkkk';
+})
+.then((data) => {
+  console.log('2 =>', data);
+},
+(e) => {
+  console.log('3 =>', e);
+}
+)
+
+const responseList = [	
+  { id: 1, a: 1 },	
+  { id: 2, a: 2 },	
+  { id: 3, a: 3 },	
+  { id: 1, a: 4 },	
+];
+function filterProperty(arr, property) {
+  return responseList.reduce((start, next) => {
+    if (!start.find(item => item[property] === next[property])) {
+      start.push(next)
+    }
+    return start
+  }, [])
+}
+filterProperty(responseList, 'id')
+
+// 返回当前参数的饿数据类型
+function paramType(param) {
+  if (param === null) {
+    return
+  }
+  // 如"[object Object]", "[object Number]"
+  return typeof param === 'object' 
+  ? Object.prototype.toString.call(param).replace(/\[[a-z]+\s/, '').replace(/\]/, '')
+  : typeof param
+}
+
+var template = 'hi, {{name}}. my year is {{age}}. but no {{money}}';
+var data = {
+  name: 'QiuQiu',
+  age: 26
+};
+function strEngine(template, data) {
+  let str = template;
+  for (key in data) {
+    var currentRxep = new RegExp(`\{\{${key}\}\}`, 'g');
+    str = str.replace(currentRxep, data[key]);
+  }
+  str = str.replace(/\{\{.*\}\}/g , undefined);
+  return str
+}
+strEngine(template, data);
